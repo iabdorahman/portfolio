@@ -1,0 +1,561 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+// font load mixin
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+	$src: null;
+
+	$extmods: (
+		eot: "?",
+		svg: "#" + str-replace($name, " ", "_")
+	);
+
+	$formats: (
+		otf: "opentype",
+		ttf: "truetype"
+	);
+
+	@each $ext in $exts {
+		$extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+		$format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+		$src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+	}
+
+	@font-face {
+		font-family: quote($name);
+		font-style: $style;
+		font-weight: $weight;
+		src: $src;
+	}
+}
+
+// Fonts
+// Cairo fonts
+@include font-face('cairo', fonts/cairo/Cairo-Regular , null, null, ttf);
+@include font-face('cairo-semi', fonts/cairo/Cairo-SemiBold , null, null, ttf);
+@include font-face('cairo-bold', fonts/cairo/Cairo-Bold , null, null, ttf);
+// Changa fonts
+@include font-face('changa', fonts/changa/Changa-Regular , null, null, ttf);
+@include font-face('changa-semi', fonts/changa/Changa-SemiBold , null, null, ttf);
+@include font-face('changa-bold', fonts/cairo/Changa-Bold , null, null, ttf);
+// Changa fonts
+@include font-face('TitilliumWeb', fonts/titillum-web/TitilliumWeb-Regular , null, null, ttf);
+@include font-face('TitilliumWeb-semi', fonts/titillum-web/TitilliumWeb-SemiBold , null, null, ttf);
+@include font-face('TitilliumWeb-bold', fonts/titillum-web/TitilliumWeb-Bold , null, null, ttf);
+
+// fonts global rules
+a{
+  font-family: 'cairo-bold';
+}
+h1, h2, h3, h4, h5, h6{
+  font-family: 'changa-semi';
+}
+p, span {
+  font-family: 'cairo';
+  font-weight: 600;
+}
+
+
+// colors
+$white: rgb(255, 255, 255);
+$black: #000;
+$darkWhite: rgba(255, 255, 255, 0.7);
+$darkTitle: #000;
+$whiteTitle: #fff;
+$grayBackground: #f3f3f3;
+$darkBackground: #2d3436;
+$grayTxt: #797979;
+
+// hide any items flow out on x
+#about , #portfolio , #skills , #contact{
+  overflow-x  : hidden;
+}
+header {
+  padding-bottom: 20vh;
+}
+section {
+  padding: 20vh 0;
+}
+footer {
+  padding: 8vh 0 2vh;
+}
+.overlay {
+  position: absolute;
+  background-color: rgba(0, 0%, 0%, 0.3);
+  top: 0; bottom: 0; left: 0; right: 0;
+}
+
+// social media links customization.
+// colors variables for dynamic changes.
+@mixin social-media($aColor,$svgColor,$borderColor,$hoverBg,$hoverColor,$margin,$padding,$font-size) {
+  .social-media{
+    a{
+      display: inline-block;
+      position: relative;
+      color: $aColor;
+      margin: $margin;
+      svg{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50% , -65%);
+        font-size: $font-size;
+        transition: .3s all ease;
+        background-color: $svgColor;
+      }
+    }
+    a::before{
+        content: "";
+        display: inherit;
+        padding: $padding;
+        border: 1px solid $borderColor;
+        transform: rotate(45deg);
+        transition: .3s all ease;
+    }
+    a:hover:before {
+      background-color: $hoverBg;
+      border: 1px solid transparent;
+    }
+    a:hover svg{
+      color: $hoverColor;
+    }
+  }
+}
+
+// header
+header  {
+  // background color after scroll down { bg-dark > bootstrap class }
+  text-align: center;
+  height: 100vh;
+  background-image: url('../images/bg-header.jpg');
+  background-size: cover;
+  width: 90%;
+  background-position: center;
+  color: $white;
+  .bg-dark {
+    background-color: $darkBackground;
+    background-image: linear-gradient(180deg, #0e0e0e70 0%, #0000004f 90%);
+    // background-color: hsla(0, 0%, 0%, 0.9) !important;
+    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.7);
+  }
+  // navbar
+  .navbar {
+    padding-top: 3%;
+    position: fixed;
+    width: 100%;
+    z-index: 40;
+    left: 0;
+    right: 0;
+    transition: .7s all ease-in-out;
+
+    // social media links
+    @include social-media($white, transparent, $darkWhite, $white, $black, 3px, 12px, .8em);
+
+    .navbar-toggler {
+      color: $white !important;
+      border-color: rgba(255, 255, 255, 0) !important;
+    }
+    .nav-item {
+      text-align: right;
+      .nav-link {
+        color: $darkWhite;
+        transition: all .3 ease;
+        font-weight: bold;
+        text-transform: uppercase;
+        position: relative;
+        outline: none;
+      }
+      .active{
+        color: $whiteTitle !important;
+      }
+      .nav-link:focus{color: $whiteTitle;}
+      .nav-link:hover{
+        color: $white !important;
+      }
+    }
+  }
+  .header-content {
+    position: relative;
+    top: 50vh;
+    transform: translateY(-50%);
+    letter-spacing: 3px;
+    h2{
+      font-size: 2.3em;
+      text-transform: uppercase;
+    }
+    p{color: $darkWhite; }
+  }
+  .scroll-down {
+    position: relative;
+    top: calc(100vh - 150px);
+    p{
+      margin-bottom: .5em;
+      font-weight: 300 !important;
+    }
+    animation-name: scroll;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-delay: 3s;
+    -webkit-animation-name: scroll;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-delay: 3s;
+  }
+  @keyframes scroll {
+    0% {top:calc(100vh - 150px);}
+    50% {top:calc(97vh - 150px);}
+    100% {top:calc(100vh - 150px);}
+  }
+}
+// end of header section;
+
+// About Me
+.about-me {
+  background-color: $grayBackground;
+  position: relative;
+  text-align: center;
+  .holder{ 
+    margin: auto;
+    width: 50%;
+    h3 {
+      font-size: 2em;
+      text-align: center;
+    }
+    img {
+      max-width: 150px;
+      border: 5px solid rgba(192, 192, 192, 0.356);
+      border-radius: 50%;
+    }
+    .cv-download{
+      padding-top: 25px;
+      p {
+        color: $grayTxt;
+        text-align: justify ;
+        letter-spacing: 1px;
+      }
+      a{
+        font-size: .9rem;
+        margin: 20px 10px 0 10px;
+        display: inline-block;
+        text-decoration: none;
+        border: none;
+        outline: none;
+        background: linear-gradient(to right, #00aee0 0%, #00fedc 51%, #00aee0 100%);
+        background-size: 200% auto;
+        color: #fff;
+        padding: 10px 20px;
+        transition: all ease-in-out .3s;
+        box-shadow: 0px 5px 14px -5px #00aee0;
+      }
+      a:hover{
+        background-position: center right;
+        box-shadow: 0px 0px 0 0 #00aee0;
+      }
+    }
+  }
+}
+// end of About Me section;
+
+// portfolio
+.portfolio {
+  h4{
+    font-size: 2em;
+    text-align: center;
+    padding-bottom: 100px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+  }
+
+
+  .porject {
+    padding: 0px;
+    margin: 0;
+    .img{
+      position: relative;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      img {
+        width: 100%;
+      }
+      .preview {
+        position: absolute;
+        color: #fff;
+        letter-spacing: 3px;
+        font-size: .8em;
+        text-transform: uppercase;
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 1px solid #fff;
+        padding: 10px 20px;
+        opacity: 1;
+        transition: all .2s ease-in-out;
+        text-decoration: none;
+      }
+      .preview:hover {
+        background-color: rgba(5, 5, 5, 0.7);
+        border: 1px solid transparent;
+      }
+    }
+    a{
+      text-decoration: none;
+    }
+    .details {
+      padding: 30px 20px;
+      transition: all .4s ease-in-out;
+      h5 {
+        color: $darkTitle;
+        font-size: 1.5em;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin: 0;
+      }
+      p {
+        width: 100%;
+        color: $darkTitle;
+        font-size: .9em;
+        margin: 0;
+        height: fit-content;
+      }
+      a {
+        color: #0254EB;
+        transition: all .4s ease-in-out;
+      }
+      a:visited {
+        color: #0254EB
+      }
+      a.morelink {
+        text-decoration:none;
+        outline: none;
+      }
+      .morecontent span {
+        display: none;
+        transition: all ease 1s;
+      }
+      .comment {
+        // width: 400px;
+        margin-left: 8px;
+      }
+    }
+  }
+  // if u want to hide preview button and show it up on hove - uncomment next line and change .preview opacite to 0
+  // .porject:hover .preview {opacity: 1;}
+  .porject:hover .details {
+    background-color: #111111;
+    h5{color: #b9b9b9;}
+    p{color: #646464;}
+    a{color: #fff;}
+  }
+  .all-projects {
+    margin-top: 15vh;
+    text-align: center;
+    a{
+      color: $darkTitle;
+      letter-spacing: 3px;
+      font-size: .8em;
+      text-transform: uppercase;
+      border: 1px solid $darkTitle;
+      padding: 10px 20px;
+      opacity: 1;
+      transition: all .3s ease;
+      text-decoration: none;
+    }
+  }
+  .all-projects:hover a{
+    background-color: #111111;
+    color: #fff;
+    border: 1px solid transparent;
+  }
+}
+// end of portfolio section
+
+// Skills 
+.skills {
+  background-color: $darkBackground;
+  // background for test
+  // background-color: red;
+  h4{
+    text-align: center;
+    color: $whiteTitle;
+    font-size: 2em;
+    padding-bottom: 100px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+  }
+  // slides
+  #skillsSlider {
+    .slide:focus{outline: 0;}
+    .slide:hover{
+      border: 3px solid #1b1b1b;
+      border-radius: 20px;
+    }
+    .slide {
+      text-align: center;
+      display: inline-block;
+      border: 3px solid transparent;
+      border-radius: 20px;
+      transition: .3s all;
+      h5{
+        margin-bottom: 2em;
+        color: $white;
+      }
+      .icon{
+        display: inline-block;
+        margin: 0.5em auto;
+        img{
+          max-height: 50px;
+          max-width: 150px;
+          display: inline-block;
+          text-align: center;
+        }
+        p{
+          margin-top: 5px;
+          text-align: center;
+          color: $white;
+          font-weight: 400;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
+// end of Skills section
+
+// slick slider customize
+.slick-dots li button:before{
+  font-size: 9px !important;
+  padding-top: 10px;
+  color: $white !important;
+}
+
+
+// Contact
+// changing padding section to 0 to avoid pugs and delay with data-aos ( slide in content on scroll )
+// padding has been added to .contact class
+#contact{padding: 0 !important;}
+.contact {
+  .contact-content{padding: 20vh 0 !important;}
+  background-image: url('../images/footer.jpg');
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 150px 0;
+  h4 {
+    text-align: center;
+    position: relative;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+  }
+  .content {
+    padding: 0;
+    margin: 0;
+    @media only screen and(max-width: 768px){
+      .left{
+        text-align: center !important;
+        margin: 30px 0;
+        p{margin: 10px 0 !important;}
+      }
+    }
+    .left{
+      text-align: right;
+      width: 100%;
+      padding-right: 20px;
+      p{
+        margin: 20px 0;
+        color: #fff;
+      }
+      a{
+        color: #fff;
+        display: inline-block;
+        letter-spacing: 3px;
+        font-size: .8em;
+        text-transform: uppercase;
+        border: 1px solid #fff;
+        margin-top: 10px;
+        padding: 15px 20px;
+        transition: all .2s ease-in-out;
+        text-decoration: none;
+      }
+      a:hover {
+        background-color: rgba(5, 5, 5, 0.7);
+        border: 1px solid transparent;
+      }
+    }
+    @media only screen and(max-width: 768px){
+      .right{
+        margin: 10px 0 !important;
+        .link{
+          text-align: center;
+        }
+      }
+    }
+    .right{
+      padding-left: 20px;
+      width: 100%;
+      .link{
+        padding: 0;
+        margin: 20px 0;
+        display: block;
+        svg{
+          display: inline-block;
+          margin-right: 20px;
+          color: #fff;
+        }
+        a{
+          display: inline-block;
+          text-decoration: none;
+          color: #fff;
+          width: fit-content;
+        }
+      }
+    }
+  }
+}
+// end of Contact section
+
+// footer
+footer {
+  text-align: center;
+  // social media links.
+  @include social-media($black, transparent, $black, $black, $white, 6px, 20px, 1.5em);
+
+  h6{
+    font-size: .8em;
+    margin-top: 2em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+}
+
+// media queries
+
+// responsive height fix
+@media only screen and (max-width: 600px) {
+  header{
+    max-height: 93vh;
+    .scroll-down {
+      position: relative;
+      top: calc(93vh - 200px);
+    }
+    @keyframes scroll {
+      0% {top:calc(93vh - 200px);}
+      50% {top:calc(91vh - 200px);}
+      100% {top:calc(93vh - 200px);}
+    }
+  }
+  // About me <p>
+  #about{ .holder{ .cv-download{
+    width: 180%;
+    transform: translateX(-20%);
+    p{
+      text-align: center;
+    }
+  }}}
+}
