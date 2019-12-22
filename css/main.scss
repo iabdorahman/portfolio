@@ -534,6 +534,32 @@ footer {
   }
 }
 
+// show more or less for projects details.
+
+.addReadMore.showlesscontent .SecSec,
+    .addReadMore.showlesscontent .readLess {
+        display: none;
+    }
+ 
+    .addReadMore.showmorecontent .readMore {
+        display: none;
+    }
+ 
+    .addReadMore .readMore,
+    .addReadMore .readLess {
+        font-weight: bold;
+        font-size: .9em;
+        margin-left: 2px;
+        color: #007bff;
+        cursor: pointer;
+    }
+ 
+    .addReadMoreWrapTxt.showmorecontent .SecSec,
+    .addReadMoreWrapTxt.showmorecontent .readLess {
+        display: block;
+        z-index: 100;
+    }
+
 // media queries
 
 // responsive height fix

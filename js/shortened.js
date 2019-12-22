@@ -17,47 +17,38 @@
 
 
 $(document).ready(function() {
-	var showChar = 50;
-	var ellipsestext = "...";
-	var moretext = "more";
-	var lesstext = "less";
-	$('.more').each(function() {
-		var content = $(this).html();
-		if(content.length > showChar) {
-			// set details box height -> customized by Abdulrahman
-			$('.details p').css('height', 'fit-content');
-			var c = content.substr(0, showChar);
-			var h = content.substr(showChar-1, content.length - showChar);
-			var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';			
-			$(this).html(html);
-		}
-	});
-
-	// customized better code
-	$(".morelink").on('click', function(e){
-		e.preventDefault();
-		$(this).toggleClass('less');
-		if($(this).hasClass('less')){
-			$(this).html('less');
-		} else {
-			$(this).html('more');
-		}
-		$(this).parent().prev().toggle();
-		$(this).prev().toggle();
-		return false;
-	});
 	
-	// $(".morelink").click(function(){
-	// 	if($(this).hasClass("less")) {
-	// 		$(this).removeClass("less");
-	// 		$(this).html(moretext);
-	// 	} else {
-	// 		$(this).addClass("less");
-	// 		$(this).html(lesstext);
-	// 	}
-	// 	$(this).parent().prev().toggle();
-	// 	$(this).prev().toggle();		
-	// 	return false;
-	// });
+	function AddReadMore() {
+    //This limit you can set after how much characters you want to show Read More.
+    var carLmt = 150;
+    // Text to show when text is collapsed
+    var readMoreTxt = " ... More";
+    // Text to show when text is expanded
+    var readLessTxt = " Less";
+ 
+ 
+    //Traverse all selectors with this class and manupulate HTML part to show Read More
+    $(".addReadMore").each(function() {
+        if ($(this).find(".firstSec").length)
+            return;
+ 
+        var allstr = $(this).text();
+        if (allstr.length > carLmt) {
+            var firstSet = allstr.substring(0, carLmt);
+            var secdHalf = allstr.substring(carLmt, allstr.length);
+            var strtoadd = firstSet + "<span class='SecSec'>" + secdHalf + "</span><span class='readMore'  title='Click to Show More'>" + readMoreTxt + "</span><span class='readLess' title='Click to Show Less'>" + readLessTxt + "</span>";
+            $(this).html(strtoadd);
+        }
+ 
+    });
+    //Read More and Read Less Click Event binding
+    $(document).on("click", ".readMore,.readLess", function() {
+        $(this).closest(".addReadMore").toggleClass("showlesscontent showmorecontent");
+    });
+}
+$(function() {
+    //Calling function after Page Load
+    AddReadMore();
+});
 	
 });
